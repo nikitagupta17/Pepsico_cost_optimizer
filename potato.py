@@ -11,7 +11,7 @@ df.columns = df.columns.str.strip()
 df.dropna(how='all', inplace=True)
 
 # Rename columns to remove '_price'
-df.rename(columns=lambda x: x.replace('_Price', ' Plant'), inplace=True)
+df.rename(columns=lambda x: x.replace('_Price', ' '), inplace=True)
 
 # Streamlit dashboard
 st.set_page_config(layout="wide")
