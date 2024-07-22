@@ -62,7 +62,7 @@ with col1:
 
     flow_sources = [0, 0, 0, 0]
     flow_targets = [1, 2, 3, 4]
-    colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1']
+    colors = ['#FF9999', '#FF6666', '#FF3333', '#CC0000']  # Different tones of red
 
     flow_sankey = go.Figure(data=[go.Sankey(
         node=dict(
@@ -70,7 +70,7 @@ with col1:
             thickness=20,
             line=dict(color="black", width=0.5),
             label=flow_labels,
-            color="blue"
+            color="#FF3333"  # Main color for the nodes
         ),
         link=dict(
             source=flow_sources,
@@ -80,34 +80,20 @@ with col1:
         )
     )])
 
-    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=12)
+    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10, height=350)
     st.plotly_chart(flow_sankey, use_container_width=True)
 
 with col2:
-    # Bar chart for potato prices
-    bar_fig = go.Figure()
-    for plant in cost_columns:
-        bar_fig.add_trace(go.Bar(
-            x=[plant],
-            y=[filtered_df[plant].values[0]],
-            name=plant,
-            marker_color='#007bff'  # Better color for visibility
-        ))
+    # Similar visualization as the removed second graph
+    st.subheader("Average Cost per Ton in Different Regions")
 
-    bar_fig.update_layout(title_text="Potato Prices per Plant", xaxis_title="Plant", yaxis_title="Price", 
-                          barmode='group')
-    st.plotly_chart(bar_fig, use_container_width=True)
+    regions = filtered_df_by_bu['Region'].unique()
+    avg_costs = [filtered_df_by_bu[filtered_df_by_bu['Region'] == region][cost_columns].mean().mean() for region in regions]
 
-# Place the similar visualization below the two side-by-side charts
-st.subheader("Average Cost per Ton in Different Regions")
+    similar_fig = go.Figure(data=[
+        go.Bar(name='Selected Region', x=regions, y=avg_costs, marker_color='#28a745')  # Green color for visibility
+    ])
 
-regions = filtered_df_by_bu['Region'].unique()
-avg_costs = [filtered_df_by_bu[filtered_df_by_bu['Region'] == region][cost_columns].mean().mean() for region in regions]
-
-similar_fig = go.Figure(data=[
-    go.Bar(name='Selected Region', x=regions, y=avg_costs, marker_color='#28a745')  # Better color for visibility
-])
-
-similar_fig.update_layout(barmode='group', title_text="Average Cost per Ton in Different Regions", 
-                          xaxis_title="Region", yaxis_title="Average Cost per Ton")
-st.plotly_chart(similar_fig, use_container_width=True)
+    similar_fig.update_layout(barmode='group', title_text="Average Cost per Ton in Different Regions", 
+                              xaxis_title="Region", yaxis_title="Average Cost per Ton", height=350)
+    st.plotly_chart(similar_fig, use_container_width=True)
