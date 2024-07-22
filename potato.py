@@ -51,17 +51,19 @@ st.write(result_table.to_html(index=False, border=0, classes='table table-stripe
 
 st.write(f"By relocating production from {selected_plant} to the {destination_plant}, the estimated cost savings are ${cost_difference}/ton")
 
-# Create a column layout
+# Create layout with Sankey diagram on top and average cost graph below
 col1, col2 = st.columns(2)
 
 with col1:
     # Improved flow diagram with shades of blue
-    flow_labels = ['Business Unit', 'Season', 'Region', 'Potato', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
-    flow_values = [filtered_df['Channo'].values[0], filtered_df['Pune'].values[0], 
-                   filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
-
+    flow_labels = ['BU', 'Season', 'Region', 'Potato', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
     flow_sources = [0, 0, 0, 0, 4, 5, 6, 7]
     flow_targets = [1, 2, 3, 4, 5, 6, 7, 8]
+    flow_values = [filtered_df[selected_plant].values[0], filtered_df[selected_plant].values[0], 
+                   filtered_df[selected_plant].values[0], filtered_df[selected_plant].values[0], 
+                   filtered_df['Channo'].values[0], filtered_df['Pune'].values[0],
+                   filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
+
     colors = ['#007bff', '#3399ff', '#66ccff', '#99ccff',  # Shades of blue for links
               '#007bff', '#3399ff', '#66ccff', '#99ccff']  # Same shades for the nodes
 
@@ -85,7 +87,7 @@ with col1:
     st.plotly_chart(flow_sankey, use_container_width=True)
 
 with col2:
-    # Similar visualization to the removed second graph
+    # Average Cost per Ton in Different Regions
     st.subheader("Average Cost per Ton in Different Regions")
 
     regions = filtered_df_by_bu['Region'].unique()
