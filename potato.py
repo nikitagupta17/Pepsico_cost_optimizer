@@ -47,7 +47,7 @@ result_table = pd.DataFrame({
 })
 
 st.subheader("Optimization Results")
-st.dataframe(result_table, use_container_width=True)
+st.dataframe(result_table, index = False)
 
 st.write(f"By relocating production from {selected_plant} to the {destination_plant}, the estimated cost savings are ${cost_difference}/ton")
 
