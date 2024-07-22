@@ -11,7 +11,7 @@ df.columns = df.columns.str.strip()
 df.dropna(how='all', inplace=True)
 
 # Rename columns to remove '_price'
-df.rename(columns=lambda x: x.replace('_Price', ' '), inplace=True)
+df.rename(columns=lambda x: x.replace('_Price', ''), inplace=True)
 
 # Streamlit dashboard
 st.set_page_config(layout="wide")
@@ -51,7 +51,7 @@ st.write(result_table.to_html(index=False, border=0, classes='table table-stripe
 
 st.write(f"By relocating production from {selected_plant} to the {destination_plant}, the estimated cost savings are ${cost_difference}/ton")
 
-
+# Improved flow diagram with shades of blue
 flow_labels = ['Consumption Cost', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
 flow_values = [filtered_df['Channo'].values[0], filtered_df['Pune'].values[0], 
                filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
@@ -80,7 +80,19 @@ flow_sankey = go.Figure(data=[go.Sankey(
 flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10)
 st.plotly_chart(flow_sankey)
 
+# Bar chart for potato prices
+bar_fig = go.Figure()
+for plant in cost_columns:
+    bar_fig.add_trace(go.Bar(
+        x=[plant],
+        y=[filtered_df[plant].values[0]],
+        name=plant
+    ))
 
+bar_fig.update_layout(title_text="Potato Prices per Plant", xaxis_title="Plant", yaxis_title="Price")
+st.plotly_chart(bar_fig)
+
+# Similar visualization to the provided image
 regions = filtered_df_by_bu['Region'].unique()
 avg_costs = [filtered_df_by_bu[filtered_df_by_bu['Region'] == region][cost_columns].mean().mean() for region in regions]
 
