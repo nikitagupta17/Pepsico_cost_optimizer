@@ -60,8 +60,7 @@ flow_labels = [
     'Channo Cost', 
     'Pune Cost', 
     'Kolkata Cost', 
-    'UP Cost', 
-    'Optimal Plant: ' + destination_plant
+    'UP Cost'
 ]
 
 # Creating a node mapping for easier reference
@@ -86,9 +85,7 @@ flow_targets = [
     node_mapping['Channo Cost'],
     node_mapping['Pune Cost'],
     node_mapping['Kolkata Cost'],
-    node_mapping['UP Cost'],
-    node_mapping['Optimal Plant: ' + destination_plant],
-    node_mapping['Optimal Plant: ' + destination_plant]
+    node_mapping['UP Cost']
 ]
 
 flow_values = [
