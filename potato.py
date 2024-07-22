@@ -47,7 +47,7 @@ result_table = pd.DataFrame({
 })
 
 st.subheader("Resultant Output Table")
-st.write(result_table)
+st.dataframe(result_table, use_container_width=True)
 
 st.write(f"If we move the plant from the {selected_plant} to the {destination_plant}, we will save ${cost_difference}/ton amount.")
 
