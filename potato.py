@@ -52,17 +52,15 @@ st.write(result_table.to_html(index=False, border=0, classes='table table-stripe
 st.write(f"By relocating production from {selected_plant} to the {destination_plant}, the estimated cost savings are ${cost_difference}/ton")
 
 # Create layout with Sankey diagram on top and average cost graph below
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([2, 1])
 
 with col1:
-    # Improved flow diagram with shades of blue
+    # Improved flow diagram with correct node sequence
     flow_labels = ['BU', 'Season', 'Region', 'Potato', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
-    flow_sources = [0, 0, 0, 0, 4, 5, 6, 7]
-    flow_targets = [1, 2, 3, 4, 5, 6, 7, 8]
-    flow_values = [filtered_df[selected_plant].values[0], filtered_df[selected_plant].values[0], 
-                   filtered_df[selected_plant].values[0], filtered_df[selected_plant].values[0], 
-                   filtered_df['Channo'].values[0], filtered_df['Pune'].values[0],
-                   filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
+    flow_sources = [0, 1, 2, 3, 4, 4, 4, 4]  # Corrected source nodes
+    flow_targets = [1, 2, 3, 4, 5, 6, 7, 8]  # Corrected target nodes
+    flow_values = [1, 1, 1, 1, filtered_df['Channo'].values[0], filtered_df['Pune'].values[0],
+                   filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]  # Sample values
 
     colors = ['#007bff', '#3399ff', '#66ccff', '#99ccff',  # Shades of blue for links
               '#007bff', '#3399ff', '#66ccff', '#99ccff']  # Same shades for the nodes
@@ -83,7 +81,7 @@ with col1:
         )
     )])
 
-    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10, height=400)
+    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10, height=500)
     st.plotly_chart(flow_sankey, use_container_width=True)
 
 with col2:
