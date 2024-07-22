@@ -18,7 +18,7 @@ st.set_page_config(layout="wide")
 st.title("Potato Cost Insight Dashboard")
 
 # Sidebar filters
-st.sidebar.header("Filters")
+st.sidebar.header("Select filters")
 selected_bu = st.sidebar.selectbox('Select Business Unit (BU)', df['BU'].unique())
 filtered_df_by_bu = df[df['BU'] == selected_bu]
 selected_season = st.sidebar.selectbox('Select Season', filtered_df_by_bu['Season'].unique())
@@ -46,10 +46,10 @@ result_table = pd.DataFrame({
     'Difference in Cost': [cost_difference]
 })
 
-st.subheader("Resultant Output Table")
+st.subheader("Optimization Results")
 st.dataframe(result_table, use_container_width=True)
 
-st.write(f"If we move the plant from the {selected_plant} to the {destination_plant}, we will save ${cost_difference}/ton amount.")
+st.write(f"By relocating production from {selected_plant} to the {destination_plant}, the estimated cost savings are ${cost_difference}/ton")
 
 # Improved flow diagram similar to the provided image
 flow_labels = ['Consumption Cost', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
@@ -79,11 +79,11 @@ flow_sankey = go.Figure(data=[go.Sankey(
     )
 )])
 
-flow_sankey.update_layout(title_text="Potato Cost Flow Diagram", font_size=10)
+flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10)
 st.plotly_chart(flow_sankey)
 
 # Additional visualizations filtered by BU
-st.subheader("Additional Visualizations")
+st.subheader("Cost Breakdown")
 
 # Bar chart for potato prices
 bar_fig = go.Figure()
