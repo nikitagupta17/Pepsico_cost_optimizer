@@ -55,14 +55,15 @@ st.write(f"By relocating production from {selected_plant} to the {destination_pl
 col1, col2 = st.columns(2)
 
 with col1:
-    # Improved flow diagram
-    flow_labels = ['Consumption Cost', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
+    # Improved flow diagram with shades of blue
+    flow_labels = ['Business Unit', 'Season', 'Region', 'Potato', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
     flow_values = [filtered_df['Channo'].values[0], filtered_df['Pune'].values[0], 
                    filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
 
-    flow_sources = [0, 0, 0, 0]
-    flow_targets = [1, 2, 3, 4]
-    colors = ['#FF9999', '#FF6666', '#FF3333', '#CC0000']  # Different tones of red
+    flow_sources = [0, 0, 0, 0, 4, 5, 6, 7]
+    flow_targets = [1, 2, 3, 4, 5, 6, 7, 8]
+    colors = ['#007bff', '#3399ff', '#66ccff', '#99ccff',  # Shades of blue for links
+              '#007bff', '#3399ff', '#66ccff', '#99ccff']  # Same shades for the nodes
 
     flow_sankey = go.Figure(data=[go.Sankey(
         node=dict(
@@ -70,7 +71,7 @@ with col1:
             thickness=20,
             line=dict(color="black", width=0.5),
             label=flow_labels,
-            color="#FF3333"  # Main color for the nodes
+            color="#007bff"  # Main color for the nodes
         ),
         link=dict(
             source=flow_sources,
@@ -80,11 +81,11 @@ with col1:
         )
     )])
 
-    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10, height=350)
+    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10, height=400)
     st.plotly_chart(flow_sankey, use_container_width=True)
 
 with col2:
-    # Similar visualization as the removed second graph
+    # Similar visualization to the removed second graph
     st.subheader("Average Cost per Ton in Different Regions")
 
     regions = filtered_df_by_bu['Region'].unique()
@@ -95,5 +96,5 @@ with col2:
     ])
 
     similar_fig.update_layout(barmode='group', title_text="Average Cost per Ton in Different Regions", 
-                              xaxis_title="Region", yaxis_title="Average Cost per Ton", height=350)
+                              xaxis_title="Region", yaxis_title="Average Cost per Ton", height=400)
     st.plotly_chart(similar_fig, use_container_width=True)
