@@ -51,60 +51,63 @@ st.write(result_table.to_html(index=False, border=0, classes='table table-stripe
 
 st.write(f"By relocating production from {selected_plant} to the {destination_plant}, the estimated cost savings are ${cost_difference}/ton")
 
-# Improved flow diagram similar to the provided image
-flow_labels = ['Consumption Cost', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
-flow_values = [filtered_df['Channo'].values[0], filtered_df['Pune'].values[0], 
-               filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
+# Create a column layout
+col1, col2 = st.columns(2)
 
-flow_sources = [0, 0, 0, 0]
-flow_targets = [1, 2, 3, 4]
-flow_values = [filtered_df['Channo'].values[0], filtered_df['Pune'].values[0],
-               filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
+with col1:
+    # Improved flow diagram
+    flow_labels = ['Consumption Cost', 'Channo Plant', 'Pune Plant', 'Kolkata Plant', 'UP Plant']
+    flow_values = [filtered_df['Channo'].values[0], filtered_df['Pune'].values[0], 
+                   filtered_df['Kolkata'].values[0], filtered_df['UP'].values[0]]
 
-colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1']
+    flow_sources = [0, 0, 0, 0]
+    flow_targets = [1, 2, 3, 4]
+    colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1']
 
-flow_sankey = go.Figure(data=[go.Sankey(
-    node=dict(
-        pad=15,
-        thickness=20,
-        line=dict(color="black", width=0.5),
-        label=flow_labels,
-        color="blue"
-    ),
-    link=dict(
-        source=flow_sources,
-        target=flow_targets,
-        value=flow_values,
-        color=colors
-    )
-)])
+    flow_sankey = go.Figure(data=[go.Sankey(
+        node=dict(
+            pad=15,
+            thickness=20,
+            line=dict(color="black", width=0.5),
+            label=flow_labels,
+            color="blue"
+        ),
+        link=dict(
+            source=flow_sources,
+            target=flow_targets,
+            value=flow_values,
+            color=colors
+        )
+    )])
 
-flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=10)
-st.plotly_chart(flow_sankey)
+    flow_sankey.update_layout(title_text="Potato Cost Flow Analysis", font_size=12)
+    st.plotly_chart(flow_sankey, use_container_width=True)
 
-# Additional visualizations filtered by BU
-st.subheader("Cost Breakdown")
+with col2:
+    # Bar chart for potato prices
+    bar_fig = go.Figure()
+    for plant in cost_columns:
+        bar_fig.add_trace(go.Bar(
+            x=[plant],
+            y=[filtered_df[plant].values[0]],
+            name=plant,
+            marker_color='#007bff'  # Better color for visibility
+        ))
 
-# Bar chart for potato prices
-bar_fig = go.Figure()
-for plant in cost_columns:
-    bar_fig.add_trace(go.Bar(
-        x=[plant],
-        y=[filtered_df[plant].values[0]],
-        name=plant
-    ))
+    bar_fig.update_layout(title_text="Potato Prices per Plant", xaxis_title="Plant", yaxis_title="Price", 
+                          barmode='group')
+    st.plotly_chart(bar_fig, use_container_width=True)
 
-bar_fig.update_layout(title_text="Potato Prices per Plant", xaxis_title="Plant", yaxis_title="Price")
-st.plotly_chart(bar_fig)
+# Place the similar visualization below the two side-by-side charts
+st.subheader("Average Cost per Ton in Different Regions")
 
-# Similar visualization to the provided image
 regions = filtered_df_by_bu['Region'].unique()
 avg_costs = [filtered_df_by_bu[filtered_df_by_bu['Region'] == region][cost_columns].mean().mean() for region in regions]
 
 similar_fig = go.Figure(data=[
-    go.Bar(name='Selected Region', x=regions, y=avg_costs)
+    go.Bar(name='Selected Region', x=regions, y=avg_costs, marker_color='#28a745')  # Better color for visibility
 ])
 
 similar_fig.update_layout(barmode='group', title_text="Average Cost per Ton in Different Regions", 
                           xaxis_title="Region", yaxis_title="Average Cost per Ton")
-st.plotly_chart(similar_fig)
+st.plotly_chart(similar_fig, use_container_width=True)
