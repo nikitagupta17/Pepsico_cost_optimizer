@@ -84,7 +84,9 @@ else:
     - Total consumption cost at **{selected_plant}**: **${selected_plant_cost}/ton**
     
     Total consumption cost at **{destination_plant}**: **${destination_plant_cost}/ton**
+    
     At **{destination_plant}**, the transportation cost is **${transportation_cost_destination}**/ton which is comparitibley lower than the transportation cost of **{selected_plant}**.
+    
     This comprehensive cost analysis highlights the potential savings by considering all aspects of production and transportation costs. In the Business Unit (BU) of **{selected_bu}**, relocating operations from **{selected_plant}** to **{destination_plant}** could lead to significant savings. The savings in cost will amount to the difference between the total costs at these two plants, considering factors like buying rate, plant loss, cold store loss, leno bag and other costs, and transportation cost.
 
     **Final Summary:**
