@@ -33,10 +33,24 @@ filtered_df = filtered_df_by_season_and_region[filtered_df_by_season_and_region[
 
 # Determine the destination plant with the least cost
 cost_columns = ['Channo', 'Pune', 'Kolkata', 'UP']
-destination_plant = filtered_df[cost_columns].idxmin(axis=1).values[0]
+costs = filtered_df[cost_columns].values.flatten()
+min_cost = min(costs)
+
+# Find all plants with the minimum cost
+min_cost_plants = [cost_columns[i] for i, cost in enumerate(costs) if cost == min_cost]
+
+if len(min_cost_plants) == 1:
+    destination_plant = min_cost_plants[0]
+else:
+    destination_plant = None
+
 selected_plant_cost = round(filtered_df[selected_plant].values[0])
-destination_plant_cost = round(filtered_df[destination_plant].values[0])
-cost_difference = int(round(selected_plant_cost - destination_plant_cost))
+if destination_plant:
+    destination_plant_cost = round(filtered_df[destination_plant].values[0])
+    cost_difference = int(round(selected_plant_cost - destination_plant_cost))
+else:
+    destination_plant_cost = None
+    cost_difference = None
 
 # Breakdown costs
 buying_rate = round(filtered_df['Buying Rate $/Ton'].values[0])
@@ -44,14 +58,17 @@ plant_loss = round(filtered_df['Plant Loss $/Ton'].values[0])
 cold_store_loss = round(filtered_df['Cold Store Loss $/Ton'].values[0])
 leno_bag_and_others = round(filtered_df['Leno Bag and Others $/Ton'].values[0])
 transportation_cost_selected = round(filtered_df[f'Transportation cost {selected_plant}'].values[0])
-transportation_cost_destination = round(filtered_df[f'Transportation cost {destination_plant}'].values[0])
+if destination_plant:
+    transportation_cost_destination = round(filtered_df[f'Transportation cost {destination_plant}'].values[0])
+else:
+    transportation_cost_destination = None
 
 # Resultant output table
 result_table = pd.DataFrame({
     'BU': [selected_bu],
     'Plant to move': [selected_plant],
     'Destination Plant': [destination_plant],
-    'Difference in Cost': [cost_difference]
+    'Difference in Cost': [cost_difference] if destination_plant else 'N/A'
 })
 
 st.subheader("Cost Analysis Summary")
@@ -61,10 +78,24 @@ st.write(result_table.to_html(index=False, border=0, classes='table table-stripe
 st.markdown("<br>", unsafe_allow_html=True)
 
 # Detailed text insight with markdown
-if selected_plant == destination_plant:
+if destination_plant is None:
     insight_text = f"""
     **Cost Analysis and Optimization Suggestion**
+
+    All plants have the same cost for the selected potato. Therefore, there is no specific plant that stands out as the lowest-cost option.
     
+    The cost for the selected plant **{selected_plant}** and other plants is uniformly **${selected_plant_cost}/ton**.
+    
+    **Summary:**\n
+    Since all plants have the same cost, cost optimization is not applicable in this scenario. You can consider other factors such as logistical aspects or production capacities for making a decision.
+
+    **Recommendation:**\n
+    Given the uniformity in cost, you may continue with the selected plant or choose based on other strategic factors, as no cost savings are identified in the current analysis.
+    """
+elif selected_plant == destination_plant:
+    insight_text = f"""
+    **Cost Analysis and Optimization Suggestion**
+
     You have selected **{selected_plant}**, which is currently the lowest-cost option among the available plants. 
     The total cost for **{selected_plant}** is **${selected_plant_cost}/ton**, which is lower compared to other plants.
     Therefore, no further cost optimization is possible with the given data.
@@ -85,7 +116,7 @@ else:
     
     Total consumption cost at **{destination_plant}**: **${destination_plant_cost}/ton**
     
-    At **{destination_plant}**, the transportation cost is **${transportation_cost_destination}**/ton which is Comparatively lower than the transportation cost of **{selected_plant}**.
+    At **{destination_plant}**, the transportation cost is **${transportation_cost_destination}**/ton which is comparatively lower than the transportation cost of **{selected_plant}**.
     
     This comprehensive cost analysis highlights the potential savings by considering all aspects of production and transportation costs. In the Business Unit (BU) of **{selected_bu}**, relocating operations from **{selected_plant}** to **{destination_plant}** could lead to significant savings. The savings in cost will amount to the difference between the total costs at these two plants, considering factors like buying rate, plant loss, cold store loss, leno bag and other costs, and transportation cost.
 
