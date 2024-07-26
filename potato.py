@@ -161,7 +161,12 @@ with tab1:
                     cost = filtered_data[filtered_data['Potato'] == selected_potato][consumption_column].mean()
                     plant_costs.append([plant, f"${cost:.2f} per ton"])
             
-            st.table(pd.DataFrame(plant_costs, columns=["Plant", "Cost"]).style.set_properties(**{'font-size': '12px'}))
+            #st.table(pd.DataFrame(plant_costs, columns=["Plant", "Cost"]).style.set_properties(**{'font-size': '12px'}).hide_index())
+            df = pd.DataFrame(plant_costs, columns=["Plant", "Cost"])
+
+            # Convert DataFrame to HTML and display using st.write()
+            html_table = df.to_html(index=False, border=0, classes='table table-striped')
+            st.write(html_table, unsafe_allow_html=True)
 
     if selected_potato:
         # Optimized result and insights
@@ -187,8 +192,8 @@ with tab1:
                 'Difference ($/Ton)': [total_cost_selected - total_cost_destination]
             })
 
-            st.table(insights_df)
-
+            st.write(insights_df.to_html(index=False, border=0, classes='table table-striped'), unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
             if selected_plant == destination_plant:
                 st.write("The selected plant is already the lowest-cost option. No further cost optimization is possible.")
             else:
