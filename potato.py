@@ -13,7 +13,7 @@ with col2:
     st.image('ibm_logo.png', width=80)  # Adjust width as needed
 
 with col1:
-    st.image('pepsico_logo.jpg', width=250)  # Adjust width as needed
+    st.image('pep_logo.jpg', width=100)  # Adjust width as needed
 
 # Initialize session state for node selections
 if 'selected_bu' not in st.session_state:
